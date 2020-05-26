@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,4 +47,18 @@ class UriControllerTest {
 
     }
 
+    @Test
+    public void getEvents() throws Exception {
+
+        Event newEvent = new Event();
+        newEvent.setName("winter is");
+        newEvent.setLimit(10L);
+        mockMvc.perform(get("/events/list").sessionAttr("visitTime", LocalDateTime.now())
+                .flashAttr("newEvent", newEvent))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("//p").nodeCount(2));
+
+
+    }
 }
